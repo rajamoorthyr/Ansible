@@ -17,7 +17,7 @@
 
           - name: Create conf file for NTP
             template:
-                    src=/home/ec2-user/ansible/templates/ntp.j2
+                    src=Ansible/Templates/NTP/ntp.j2
                     dest=/etc/ntp.conf
                     owner=root
                     group=root
