@@ -1,0 +1,31 @@
+---
+- name: NTP configuration
+  hosts: testing
+  become: yes
+
+  vars:
+          ntp_server_1: 0.amazon.pool.ntp.org iburst
+          ntp_server_2: 1.amazon.pool.ntp.org iburst
+          ntp_server_3: 2.amazon.pool.ntp.org iburst
+          ntp_server_4: 3.amazon.pool.ntp.org iburst
+
+  tasks:
+          - name: Install NTP
+            yum:
+                    name=ntp
+                    state=installed
+
+          - name: Create conf file for NTP
+            template:
+                    src=/home/ec2-user/ansible/templates/ntp.j2
+                    dest=/etc/ntp.conf
+                    owner=root
+                    group=root
+                    mode=0644
+                    backup=yes
+
+          - name: Make sure the NTP service is running
+            service:
+                    name=ntpd
+                    state=restarted
+                    enabled=yes
