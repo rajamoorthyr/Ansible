@@ -1,0 +1,53 @@
+---
+ - name: Creating partition and making filesystem then mounting it
+   hosts: test
+   become: yes
+
+   tasks:
+           - name: Create 1st partition
+             parted:
+                     device: /dev/xvdf
+                     number: 1
+                     state: present
+                     part_end: 500MB
+
+           - name: Create the 2nd Partition
+             parted:
+                     device: /dev/xvdf
+                     number: 2
+                     state: present
+                     part_start: 500MB
+
+           - name: Create 1st Filesystem
+             filesystem:
+                     dev: /dev/xvdf1 
+                     fstype: ext4
+
+           - name: Create 2nd Filesystem
+             filesystem:
+                     dev: /dev/xvdf2
+                     fstype: ext4
+
+           - name: Create 1st mounting directory
+             file:
+                     path: /mnt/u001
+                     state: directory
+
+           - name: Create the 2nd mounting directory
+             file:
+                     path: /mnt/u002
+                     state: directory
+
+           - name: Mount the 1st FS
+             mount:
+                     src: /dev/xvdf1
+                     path: /mnt/u001
+                     fstype: ext4
+                     state: mounted
+
+           - name: Mount the 2nd FS
+             mount:
+                     src: /dev/xvdf2
+                     path: /mnt/u002
+                     fstype: ext4
+                     state: mounted
