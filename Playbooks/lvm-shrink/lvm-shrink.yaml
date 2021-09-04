@@ -1,0 +1,33 @@
+---
+ - name: LVM creation
+   hosts: test
+   become: yes
+
+   tasks:
+           - name: Create 1st Partition
+             parted:
+                     device: /dev/xvdf
+                     number: 1
+                     part_end: 500MB
+                     state: present
+
+           - name: Create 2nd Partition
+             parted:
+                     device: /dev/xvdf
+                     number: 2
+                     part_start: 500MB
+                     state: present
+
+           - name: Create a Volume Group
+             lvg:
+                     vg: Testing-ansible-vg
+                     pvs: /dev/xvdf1,/dev/xvdf2
+
+           - name: Create a Logical volume
+             lvol:
+                     vg: Testing-ansible-vg
+                     lv: Testing-ansible-lvm
+                     size: 900M
+                     shrink: yes
+                     resizefs: yes
+                     force: yes
