@@ -1,0 +1,26 @@
+---
+ - name: Configuring NFS at the client side
+   hosts: testing
+   become: yes
+
+   vars:
+           source_dir: 172.31.88.168:/nfsshare
+           dest_dir: /mnt/u001
+
+   tasks:
+           - name: Install a package
+             yum:
+                     name=nfs-utils
+                     state=installed
+
+           - name: Create a directory
+             file:
+                     name="{{dest_dir}}"
+                     state=directory
+
+           - name: Mount NFS
+             mount:
+                     src: "{{source_dir}}"
+                     path: "{{dest_dir}}"
+                     fstype: nfs
+                     state: mounted
