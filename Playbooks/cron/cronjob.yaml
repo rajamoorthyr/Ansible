@@ -1,0 +1,15 @@
+---
+ - name: cronjob
+   hosts: test
+   become: yes
+
+   tasks:
+           - name: Cronjob to reboot everyday particular time
+             cron:
+                     name: "Reboot"
+                     job: "/sbin/reboot"
+                     minute: "55"
+                     hour: "15"
+                     day: "*"
+                     month: "*"
+                     weekday: "*"
