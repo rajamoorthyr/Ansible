@@ -1,0 +1,41 @@
+---
+ - name: NFS server configuration
+   hosts: test
+   become: yes
+
+   tasks:
+           - name: Install NFS package
+             yum:
+                     state=installed
+                     name=nfs-utils
+
+           - name: Create NFS share
+             file:
+                     state=directory
+                     path=/nfs-share
+
+           - name: create a sample dummy file inside the NFS directory
+             file:
+                     state=touch
+                     path=/nfs-share/dummy.txt
+
+           - name: Create NFS exports conf file
+             file:
+                     state=touch
+                     path=/etc/exports.d/nfs.exports
+
+
+           - name: Add details of what and where to be shared
+             copy:
+                     dest: /etc/exports.d/nfs.exports
+                     content: |
+                              /nfs-share *(rw)
+
+           - name: start NFS service
+             service:
+                     name=nfs-server
+                     state=restarted
+                     enabled=yes
+
+           - name: Update the exports
+             command: exportfs
