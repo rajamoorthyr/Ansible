@@ -1,0 +1,34 @@
+---
+ - name: sysctl values
+   hosts: test
+   become: yes
+
+   vars_prompt:
+
+           - name: "parameter"
+             prompt: Enter the sysctl parameter to be changed?
+             private: no
+
+           - name: "value"
+             prompt: Enter the value?
+             private: no
+
+
+   tasks:
+           - name: Check current value
+             command: sysctl {{parameter}}
+             register: result
+
+           - name: Print current Value
+             debug:
+                     msg: "{{result}}"
+
+           - name: Change sysctl parameter
+             sysctl:
+                     name: "{{parameter}}"
+                     state: present
+                     value: "{{value}}"
+
+           - name: Print message
+             debug:
+                     msg: 'Your new {{parameter}} value is {{value}}'
