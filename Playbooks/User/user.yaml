@@ -1,0 +1,19 @@
+---
+ - name: create user raj
+   hosts: test
+   become: yes
+
+   tasks:
+           - name: create a group
+             group:
+                     name: new
+                     gid: 1007
+
+           - name: Create user raj
+             user:
+                     name: raja
+                     uid: 1009
+                     group: new
+                     home: /home/test/
+                     create_home: yes
+                     state: present
