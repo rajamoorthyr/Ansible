@@ -1,1 +1,25 @@
+---
+ - name: Change ulimit values
+   hosts: test
+   become: yes
 
+   vars_prompt:
+
+           - name: "parameter"
+             prompt: Enter the ulimit parameter to be changed?
+             private: no
+
+           - name: "value"
+             prompt: Enter the value?
+             private: no
+
+
+   tasks:
+         
+           - name: Change Ulimit value
+             pam_limits:
+                     limit_item: "{{parameter}}"
+                     limit_type: soft
+                     value: "{{value}}"
+
+           
