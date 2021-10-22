@@ -1,0 +1,39 @@
+---
+
+ - name: Patching the server
+   hosts: test
+   become: yes
+
+   tasks:
+           - name: check the basic informations of system and take the backup.
+             shell: (uptime; hostname; uname -a)>> /mnt/u001/system_info.txt
+
+           - name: take the backup of boot file
+             shell: cp /boot/grub2/grub.cfg /mnt/u001/grub.cfg.bak
+
+           - name: take the back up of disk information
+             shell: df -h > /mnt/u001/df.txt ; cp /etc/fstab /mnt/u001/fstab.bak
+
+           - name: backup of network informations
+             shell: mkdir /mnt/u001/network ; ifconfig > /mnt/u001/network/network.txt ; cp /etc/sysconfig/network-scripts/* /mnt/u001/network
+
+           - name: update the patch
+             shell: yum update -y
+             when: ansible_facts["cmdline"]["BOOT_IMAGE"]=="/boot/vmlinuz-4.14.246-187.474.amzn2.x86_64"
+
+           - name: wait for 1 min before reboot
+             wait_for:
+                     timeout: 60
+
+           - name: now reboot the host
+             shell: /sbin/reboot
+             wait_for:
+                     timeout: 180
+
+           - name: check the uptime
+             shell: uptime ; uname -a
+             register: output
+            
+           - name: show it on the screen
+             debug:
+                    msg: "{{output.stdout}}"
