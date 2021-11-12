@@ -4,4 +4,4 @@ regions:
   - us-east-1
 include_filters:
 - tag:Name:
-  - 'test'
+  - 'testing'
