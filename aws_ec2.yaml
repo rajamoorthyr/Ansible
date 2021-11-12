@@ -1,0 +1,7 @@
+aws_access_key_id: AKIASRWUV6JRRUS23ZPR
+aws_secret_access_key: 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
+regions:
+  - us-east-1
+include_filters:
+- tag:Name:
+  - 'test'
