@@ -1,0 +1,26 @@
+
+---
+ - name: Check if the package is installed, if NOT install it
+   hosts: test
+   become: yes
+
+   vars_prompt:
+     - name: "package"
+       prompt: Enter the package name to be installed
+       private: no
+
+   tasks:
+     - name: Take the package details
+       package_facts:
+         manager: auto
+
+     - name: Install the package
+       package:
+         name: "{{package}}"
+         state: present
+       when: '"{{package}}" not in ansible_facts.packages'
+
+     - name: Check if the package is installed
+       debug:
+         msg: '{{package}} is installed, hence Skipping it!'
+       when: '"{{package}}" in ansible_facts.packages'
